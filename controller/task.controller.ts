@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
 import Task from "../models/task.model";
 import paginationHelper from "../helpers/paginationHelper";
+import searchHelper from "../helpers/searchHelper"
 export const index = async (req: Request, res: Response) => {
   //  Find
   interface find {
     deleted: boolean;
     status?: String;
+    title?: RegExp;
   }
 
   const find: find = {
@@ -41,6 +43,15 @@ export const index = async (req: Request, res: Response) => {
   );
 
   //End Pagination
+
+
+  let searchObject = searchHelper(req.query);
+
+    // Search Keyword
+    if (req.query.keyword) {
+      find.title = searchObject.regex;
+    }
+    // End Search Keyword
 
 
 
