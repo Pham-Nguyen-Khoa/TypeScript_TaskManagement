@@ -3,23 +3,10 @@ const router: Router = Router();
 
 import Task from "../models/task.model";
 
+import * as controller from "../controller/task.controller";
 
+router.get("/", controller.index);
 
-router.get("/", async (req: Request, res: Response) => {
-  const tasks = await Task.find({
-    deleted: false,
-  });
-  res.json(tasks);
-});
-
-router.get("/detail/:id", async (req: Request, res: Response) => {
-  const id: String = req.params.id;
-
-  const task = await Task.findOne({
-    _id: id,
-    deleted: false,
-  });
-  res.json(task);
-});
+router.get("/detail/:id", controller.detail );
 
 export const taskRouter: Router =  router;
