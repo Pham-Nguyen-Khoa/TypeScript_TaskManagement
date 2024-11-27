@@ -4,6 +4,6 @@
         "target": "ES6",
         "module": "CommonJS",
         "removeComments": true,
-        "esModuleInterop": false
+        "esModuleInterop": true
     }
 }
