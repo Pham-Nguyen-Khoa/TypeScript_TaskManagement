@@ -5,6 +5,7 @@ import * as database from "./config/database";
 import Task from "./models/task.model";
 
 
+
 //Import Router
 import indexRouter from "./router/index.router";
 
@@ -14,7 +15,7 @@ database.connect();
 const app: Express = express();
 const port: String | Number = process.env.PORT || 4000;
 
-
+app.use(express.json());
 indexRouter(app);
 
 

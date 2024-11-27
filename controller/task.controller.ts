@@ -70,3 +70,29 @@ export const detail = async (req: Request, res: Response) => {
   });
   res.json(task);
 };
+
+
+
+export const change = async (req: Request, res: Response) => {
+  try {
+    const id: String = req.params.id;
+    const status: String = req.body.status;
+    await Task.updateOne({
+      _id: id, 
+      deleted: false
+    },{
+      status: status
+    })
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công"
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Cập nhật thất bại "
+    });
+  }
+
+};
+
