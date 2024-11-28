@@ -14,4 +14,7 @@ router.patch("/change-status/:id", controller.change );
 router.patch("/change-multi", controller.changeMulti );
 
 
+router.post("/create", controller.create );
+
+
 export const taskRouter: Router =  router;
