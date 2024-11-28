@@ -191,9 +191,7 @@ export const changeMulti = async (req: Request, res: Response)=> {
 
 
 export const create = async (req: Request, res: Response)=> {
-
   try {
-   
     const task = new Task(req.body);
     const data = await task.save();
     res.json({
@@ -206,6 +204,26 @@ export const create = async (req: Request, res: Response)=> {
     res.json({
       code: 400,
       message: "Tạo thất bại",
+    });
+  }
+};
+
+
+
+export const edit = async (req: Request, res: Response)=> {
+  try {
+    const id:String = req.params.id;
+    const data = await Task.updateOne({_id: id} , req.body);
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công!",
+      data: data
+    })
+
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Cập nhật  thất bại",
     });
   }
 };
