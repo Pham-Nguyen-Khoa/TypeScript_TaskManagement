@@ -100,9 +100,6 @@ export const changeMulti = async (req: Request, res: Response) => {
     const ids: String[] = req.body.ids;
     const key: String = req.body.key;
     const value: String = req.body.value;
-    console.log(ids);
-    console.log(key);
-    console.log(value);
     enum status {
       STATUS = "status",
       DELETED = "delete",

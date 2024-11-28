@@ -1,9 +1,15 @@
-import express, { Router,Request,Response } from "express";
+import {Router} from "express";
 const router: Router = Router();
+
 
 import Task from "../models/task.model";
 
 import * as controller from "../controller/task.controller";
+
+
+import * as authMiddleware from "../middleware/authen.middleware"
+
+router.use(authMiddleware.requireAuth)
 
 router.get("/", controller.index);
 
