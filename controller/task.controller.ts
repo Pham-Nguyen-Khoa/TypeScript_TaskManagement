@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import Task from "../models/task.model";
 import paginationHelper from "../helpers/paginationHelper";
-import searchHelper from "../helpers/searchHelper"
-
-
+import searchHelper from "../helpers/searchHelper";
 
 export const index = async (req: Request, res: Response) => {
   //  Find
@@ -22,21 +20,19 @@ export const index = async (req: Request, res: Response) => {
 
   // End Find
 
-  // Sort 
-  const sort = {}
-  if(req.query.sortKey && req.query.sortValue){
+  // Sort
+  const sort = {};
+  if (req.query.sortKey && req.query.sortValue) {
     const sortKey = req.query.sortKey.toString();
     sort[sortKey] = req.query.sortValue;
-
   }
 
-  // End Sort 
+  // End Sort
 
   //Pagination
   let initPagination = {
     currentPage: 1,
     limitItems: 2,
-
   };
   const countTasks = await Task.countDocuments(find);
   const paginationObject = paginationHelper(
@@ -47,21 +43,21 @@ export const index = async (req: Request, res: Response) => {
 
   //End Pagination
 
-
   let searchObject = searchHelper(req.query);
 
-    // Search Keyword
-    if (req.query.keyword) {
-      find.title = searchObject.regex;
-    }
-    // End Search Keyword
+  // Search Keyword
+  if (req.query.keyword) {
+    find.title = searchObject.regex;
+  }
+  // End Search Keyword
 
-
-
-  const tasks = await Task.find(find).sort(sort).limit(paginationObject.limitItems).skip(paginationObject.skip);
+  const tasks = await Task.find(find)
+    .sort(sort)
+    .limit(paginationObject.limitItems)
+    .skip(paginationObject.skip);
   res.json({
     tasks: tasks,
-    totalPages: paginationObject.totalPage
+    totalPages: paginationObject.totalPage,
   });
 };
 
@@ -74,35 +70,32 @@ export const detail = async (req: Request, res: Response) => {
   res.json(task);
 };
 
-
-
 export const change = async (req: Request, res: Response) => {
   try {
     const id: String = req.params.id;
     const status: String = req.body.status;
-    await Task.updateOne({
-      _id: id, 
-      deleted: false
-    },{
-      status: status
-    })
+    await Task.updateOne(
+      {
+        _id: id,
+        deleted: false,
+      },
+      {
+        status: status,
+      }
+    );
     res.json({
       code: 200,
-      message: "Cập nhật thành công"
+      message: "Cập nhật thành công",
     });
   } catch (error) {
     res.json({
       code: 400,
-      message: "Cập nhật thất bại "
+      message: "Cập nhật thất bại ",
     });
   }
-
 };
 
-
-
-export const changeMulti = async (req: Request, res: Response)=> {
-
+export const changeMulti = async (req: Request, res: Response) => {
   try {
     const ids: String[] = req.body.ids;
     const key: String = req.body.key;
@@ -111,35 +104,30 @@ export const changeMulti = async (req: Request, res: Response)=> {
     console.log(key);
     console.log(value);
     enum status {
-        STATUS= "status",
-        DELETED="delete"
+      STATUS = "status",
+      DELETED = "delete",
     }
-    if(key == "status"){
-      const arrStatus:String[] = [
+    if (key == "status") {
+      const arrStatus: String[] = [
         "initial",
         "doing",
         "finish",
         "pending",
         "notFinish",
-     
       ];
       const checkStatus = arrStatus.includes(value.toString());
       if (!checkStatus) {
-         res.status(400).json({
+        res.status(400).json({
           code: 400,
           message: "Không có trạng thái đó",
         });
         return;
       }
-    }else if(key == "delete"){
-      const arrDelete:string[] = [
-        "true"
-        ,"false"
-     
-      ];
+    } else if (key == "delete") {
+      const arrDelete: string[] = ["true", "false"];
       const checkStatus = arrDelete.includes(value.toString());
       if (!checkStatus) {
-         res.status(400).json({
+        res.status(400).json({
           code: 400,
           message: "Không có trạng thái đó",
         });
@@ -147,28 +135,33 @@ export const changeMulti = async (req: Request, res: Response)=> {
       }
     }
 
-
-    switch(key){
-      case status.STATUS:{
-        await Task.updateMany({
-          _id: { $in : ids},
-          deleted: false
-        },{
-          status: value
-        })
+    switch (key) {
+      case status.STATUS: {
+        await Task.updateMany(
+          {
+            _id: { $in: ids },
+            deleted: false,
+          },
+          {
+            status: value,
+          }
+        );
         res.json({
           code: 200,
           message: "Cập nhật trạng thái thành công",
         });
         break;
       }
-      case status.DELETED:{
-        await Task.updateMany({
-          _id: { $in : ids},
-          deleted: false
-        },{
-          deleted: true
-        })
+      case status.DELETED: {
+        await Task.updateMany(
+          {
+            _id: { $in: ids },
+            deleted: false,
+          },
+          {
+            deleted: true,
+          }
+        );
         res.json({
           code: 200,
           message: "Xóa thành công",
@@ -176,7 +169,6 @@ export const changeMulti = async (req: Request, res: Response)=> {
         break;
       }
     }
-
   } catch (error) {
     res.json({
       code: 400,
@@ -185,21 +177,15 @@ export const changeMulti = async (req: Request, res: Response)=> {
   }
 };
 
-
-
-
-
-
-export const create = async (req: Request, res: Response)=> {
+export const create = async (req: Request, res: Response) => {
   try {
     const task = new Task(req.body);
     const data = await task.save();
     res.json({
       code: 200,
       message: "Tạo thành công!",
-      data: data
-    })
-
+      data: data,
+    });
   } catch (error) {
     res.json({
       code: 400,
@@ -208,22 +194,35 @@ export const create = async (req: Request, res: Response)=> {
   }
 };
 
-
-
-export const edit = async (req: Request, res: Response)=> {
+export const edit = async (req: Request, res: Response) => {
   try {
-    const id:String = req.params.id;
-    const data = await Task.updateOne({_id: id} , req.body);
+    const id: String = req.params.id;
+    const data = await Task.updateOne({ _id: id }, req.body);
     res.json({
       code: 200,
       message: "Cập nhật thành công!",
-      data: data
-    })
-
+      data: data,
+    });
   } catch (error) {
     res.json({
       code: 400,
       message: "Cập nhật  thất bại",
+    });
+  }
+};
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const id: String = req.params.id;
+    await Task.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() });
+    res.json({
+      code: 200,
+      message: "Xóa thành công!",
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xóa thất bại",
     });
   }
 };
